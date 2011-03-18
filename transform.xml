@@ -62,6 +62,30 @@ to produce a full specification of the schema.
         <xsl:apply-templates select="@*" mode="expand" />
         <xsl:apply-templates select="*" mode="expand" />
     </xsl:element>
+    <xsl:call-template name="foreign-key-get-columns" />
+</xsl:template>
+
+<xsl:template name="foreign-key-get-columns">
+    <xsl:variable name="pschema" select="./../.." />
+    <xsl:variable name="null" select="@null" />
+    <xsl:variable name="fktablename" select="@table" />
+    <xsl:variable name="fktable" select="$pschema/table[@name=$fktablename]" />
+    <xsl:variable name="rspkcolumns">
+        <xsl:for-each select="$fktable">
+            <xsl:call-template name="table-get-pk-columns" />
+        </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="pkcolumns" select="exsl:node-set($rspkcolumns)" />
+    <xsl:variable name="prefix" select="$fktablename" />
+    <xsl:for-each select="$pkcolumns/column">
+        <column name="{concat($prefix,'_',@name)}" type="{@type}" null="{$null}" />
+    </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="table-get-pk-columns">
+    <xsl:for-each select="column[@primary-key='true']">
+        <column name="{@name}" type="{@type}" />
+    </xsl:for-each>
 </xsl:template>
 
 <!--mode:template
