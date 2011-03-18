@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:exsl="http://exslt.org/common" >
+<xsl:output method="text" media-type="text/plain" />
+
+<xsl:variable name="dialect" select="document(concat(/build/for/@dialect,'/sql.xml'))" />
+<xsl:variable name="schemadoc" select="document(/build/for/@schema)" />
+<xsl:variable name="procschema">
+    <xsl:apply-templates select="$schemadoc/schema" mode="expand" />
+</xsl:variable>
+<xsl:variable name="schema" select="exsl:node-set($procschema)" />
+
+<xsl:template match="/">
+    <xsl:apply-templates select="/build/for/target" />
+</xsl:template>
+
+<xsl:template match="target[@name='create-all']">
+    <xsl:apply-templates select="$schema/schema/table" />
+</xsl:template>
+
+<xsl:template match="table">
+    <xsl:apply-templates select="$dialect/dml/create-table/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:text>&#xa;&#xa;</xsl:text>
+</xsl:template>
+
+<!--mode:expand
+This section specifies templates that preprocess and expand the data in the raw schema
+to produce a full specification of the schema.
+-->
+
+<xsl:template match="@*" mode="expand" >
+    <xsl:attribute name="{name()}">
+        <xsl:value-of select="." />
+    </xsl:attribute>
+</xsl:template>
+
+<xsl:template match="schema" mode="expand" >
+    <xsl:element name="schema">
+        <xsl:apply-templates select="@*" mode="expand" />
+        <xsl:apply-templates select="*" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="table" mode="expand" >
+    <xsl:element name="table">
+        <xsl:apply-templates select="@*" mode="expand" />
+        <xsl:apply-templates select="*" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="column" mode="expand" >
+    <xsl:element name="column">
+        <xsl:apply-templates select="@*" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="foreign-key" mode="expand" >
+    <xsl:element name="foreign-key">
+        <xsl:apply-templates select="@*" mode="expand" />
+        <xsl:apply-templates select="*" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<!--mode:template
+This section specifies templates that apply to text template constructs
+-->
+<xsl:template match="text" mode="template" >
+    <xsl:param name="data" />
+    <xsl:message>text</xsl:message>
+    <xsl:apply-templates mode="substitute" >
+        <xsl:with-param name="data" select="$data" />
+    </xsl:apply-templates>
+</xsl:template>
+
+<xsl:template match="each-column" mode="template" >
+    <xsl:param name="data" />
+    <xsl:variable name="temp" select="./*" />
+    <xsl:variable name="separator" select="@separator" />
+    <xsl:for-each select="$data/column">
+        <xsl:apply-templates select="$temp" mode="template" >
+            <xsl:with-param name="data" select="." />
+        </xsl:apply-templates>
+        <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$separator" />
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
+
+<!--mode:substitute
+This section declares templates that apply to text content that should be sent
+to the output with posible substitutions.
+-->
+<xsl:template match="name|type" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:variable name="sust" select="name()" />
+    <xsl:value-of select="$data/@*[name()=$sust]" />
+</xsl:template>
+
+<xsl:template match="null" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:choose>
+        <xsl:when test="$data/@null='false'">
+            <xsl:text>not null</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:text>null</xsl:text>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template match="text()" mode="substitute" >
+    <xsl:value-of select="." />
+</xsl:template>
+</xsl:stylesheet>

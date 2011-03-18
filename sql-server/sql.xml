@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dml>
+    <create-table>
+        <text>create table <name />{</text>
+        <each-column>
+            <text></type> <name /> <options /></text>
+        </each-column>
+        <text>}</text>
+    </create-table>
+<dml>
