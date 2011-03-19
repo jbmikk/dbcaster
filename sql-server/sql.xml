@@ -2,10 +2,10 @@
 
 <dml>
     <create-table>
-        <text>create table <name />{</text>
-        <each-column>
-            <text></type> <name /> <options /></text>
+        <text>create table <name />{&#xa;</text>
+        <each-column separator=",&#xa;">
+            <text> <type /> <name /> <null /></text>
         </each-column>
-        <text>}</text>
+        <text>&#xa;}</text>
     </create-table>
-<dml>
+</dml>
