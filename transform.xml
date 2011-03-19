@@ -4,7 +4,8 @@
     xmlns:exsl="http://exslt.org/common" >
 <xsl:output method="text" media-type="text/plain" />
 
-<xsl:variable name="dialect" select="document(concat(/build/for/@dialect,'/sql.xml'))" />
+<xsl:variable name="sql" select="document(concat(/build/for/@dialect,'/sql.xml'))" />
+<xsl:variable name="types" select="document(concat(/build/for/@dialect,'/types.xml'))" />
 <xsl:variable name="schemadoc" select="document(/build/for/@schema)" />
 <xsl:variable name="procschema">
     <xsl:apply-templates select="$schemadoc/schema" mode="expand" />
@@ -20,7 +21,7 @@
 </xsl:template>
 
 <xsl:template match="table">
-    <xsl:apply-templates select="$dialect/dml/create-table/*" mode="template" >
+    <xsl:apply-templates select="$sql/dml/create-table/*" mode="template" >
         <xsl:with-param name="data" select="." />
     </xsl:apply-templates>
     <xsl:text>&#xa;&#xa;</xsl:text>
@@ -117,10 +118,28 @@ This section specifies templates that apply to text template constructs
 This section declares templates that apply to text content that should be sent
 to the output with posible substitutions.
 -->
-<xsl:template match="name|type" mode="substitute" >
+<xsl:template match="name" mode="substitute" >
     <xsl:param name="data" />
     <xsl:variable name="sust" select="name()" />
     <xsl:value-of select="$data/@*[name()=$sust]" />
+</xsl:template>
+
+<xsl:template match="type" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:variable name="typename" select="$data/@type" />
+    <xsl:choose>
+        <xsl:when test="$types/types/type[name()=$typename]/not-supported">
+            <xsl:message terminate="yes">
+                Type not supported by selected dialect
+            </xsl:message>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$types/types/type[@name=$typename]/expands/@name" />
+        </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="$data/@length">
+        <xsl:value-of select="concat('(',$data/@length,')')" />
+    </xsl:if>
 </xsl:template>
 
 <xsl:template match="null" mode="substitute" >

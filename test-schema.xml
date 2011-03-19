@@ -4,24 +4,24 @@
 <schema>
     <table name='artist'>
         <column name='id' type='integer' primary-key='true' />
-        <column name='name' type='varchar(32)' />
-        <column name='lastname' type='varchar(32)' />
+        <column name='name' type='varchar' length="32" />
+        <column name='lastname' type='varchar' length="32" />
         <column name='birthdate' type='date' />
     </table>
     <table name='record_label'>
         <column name='id' type='integer' primary-key='true' />
-        <column name='name' type='varchar(32)' null='false' />
+        <column name='name' type='varchar' length="32" null='false' />
     </table>
     <table name='album'>
         <column name='id' type='integer' primary-key='true' />
-        <column name='name' type='varchar(32)' />
+        <column name='name' type='varchar' length="32" />
         <column name='year' type='date' null='true' />
         <foreign-key table='artist' />
         <foreign-key table='record_label' />
     </table>
     <table name='track'>
         <column name='id' type='integer' primary-key='true' />
-        <column name='name' type='varchar(32)' />
+        <column name='name' type='varchar' length="32" />
         <foreign-key table='album' />
     </table>
 </schema>

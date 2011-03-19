@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+    <!--
+        Other data types supported by sql server that are not ansi include:
+        bit
+        tinyint
+        money
+        uniqueidentifier
+        image
+        text
+    -->
+    <type name="char">
+        <expands name="char" />
+    </type>
+    <type name="varchar">
+        <expands name="varchar" />
+    </type>
+    <type name="nchar">
+        <expands name="nchar" />
+    </type>
+    <type name="nvarchar">
+        <expands name="nvarchar" />
+    </type>
+    <type name="chararacter">
+        <expands name="char" />
+    </type>
+    <type name="character varying">
+        <expands name="varchar" />
+    </type>
+    <type name="national chararacter">
+        <expands name="nchar" />
+    </type>
+    <type name="national character varying">
+        <expands name="nvarchar" />
+    </type>
+    <type name="bit">
+        <expands name="binary" />
+    </type>
+    <type name="bit varying">
+        <expands name="varbinary" />
+    </type>
+    <type name="smallint">
+        <expands name="smallint" />
+    </type>
+    <type name="integer">
+        <expands name="integer" />
+    </type>
+    <type name="real">
+        <expands name="real" />
+    </type>
+    <type name="float">
+        <expands name="float" />
+    </type>
+    <type name="double precision">
+        <expands name="float" />
+    </type>
+    <type name="interval">
+        <not-supported />
+    </type>
+    <type name="date">
+        <expands name="datetime" />
+    </type>
+    <type name="time">
+        <expands name="datetime" />
+    </type>
+    <type name="timestamp">
+        <expands name="datetime" />
+    </type>
+    <type name="timestampz">
+        <expands name="datetime" />
+    </type>
+    <type name="timestamp with time zone">
+        <expands name="datetime" />
+    </type>
+</types>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+    <type name="char">
+        <expands name="char" />
+    </type>
+    <type name="varchar">
+        <expands name="varchar" />
+    </type>
+    <type name="nchar">
+        <expands name="nchar" />
+    </type>
+    <type name="nvarchar">
+        <expands name="nvarchar" />
+    </type>
+    <type name="chararacter">
+        <expands name="character" />
+    </type>
+    <type name="character varying">
+        <expands name="character varying" />
+    </type>
+    <type name="national chararacter">
+        <expands name="national character" />
+    </type>
+    <type name="national character varying">
+        <expands name="national character varying" />
+    </type>
+    <type name="bit">
+        <expands name="bit" />
+    </type>
+    <type name="bit varying">
+        <expands name="bit varying" />
+    </type>
+    <type name="smallint">
+        <expands name="smallint" />
+    </type>
+    <type name="integer">
+        <expands name="integer" />
+    </type>
+    <type name="real">
+        <expands name="real" />
+    </type>
+    <type name="float">
+        <expands name="float" />
+    </type>
+    <type name="double precision">
+        <expands name="double precision" />
+    </type>
+    <type name="interval">
+        <expands name="interval" />
+    </type>
+    <type name="date">
+        <expands name="date" />
+    </type>
+    <type name="time">
+        <expands name="time" />
+    </type>
+    <type name="timestamp">
+        <expands name="timestamp" />
+    </type>
+    <type name="timestampz">
+        <expands name="timestampz" />
+    </type>
+    <type name="timestamp with time zone">
+        <expands name="timestamp with time zone" />
+    </type>
+</types>
