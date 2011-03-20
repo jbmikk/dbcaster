@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dml>
+    <create-table>
+        <text>create table <name />(&#xa;</text>
+        <each-column separator=",&#xa;">
+            <text> <name /> <type /> <null /></text>
+        </each-column>
+        <text>&#xa;);</text>
+    </create-table>
+</dml>

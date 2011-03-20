@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<types>
+    <type name="char">
+        <expands name="char" />
+    </type>
+    <type name="varchar">
+        <expands name="varchar" />
+    </type>
+    <type name="nchar">
+        <not-supported />
+    </type>
+    <type name="nvarchar">
+        <not-supported />
+    </type>
+    <type name="chararacter">
+        <expands name="char" />
+    </type>
+    <type name="character varying">
+        <expands name="varchar" />
+    </type>
+    <type name="national chararacter">
+        <not-supported />
+    </type>
+    <type name="national character varying">
+        <not-supported />
+    </type>
+    <type name="bit">
+        <expands name="bit" />
+    </type>
+    <type name="bit varying">
+        <expands name="bit" />
+    </type>
+    <type name="smallint">
+        <expands name="smallint" />
+    </type>
+    <type name="integer">
+        <expands name="int" />
+    </type>
+    <type name="real">
+        <expands name="float" />
+    </type>
+    <type name="float">
+        <expands name="float" />
+    </type>
+    <type name="double precision">
+        <expands name="double" />
+    </type>
+    <type name="interval">
+        <not-supported />
+    </type>
+    <type name="date">
+        <expands name="date" />
+    </type>
+    <type name="time">
+        <expands name="time" />
+    </type>
+    <type name="timestamp">
+        <expands name="timestamp" />
+    </type>
+    <type name="timestampz">
+        <expands name="timestamp" />
+    </type>
+    <type name="timestamp with time zone">
+        <expands name="timestamp" />
+    </type>
+</types>
