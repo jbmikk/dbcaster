@@ -21,10 +21,18 @@
 </xsl:template>
 
 <xsl:template match="table">
+
+    <!--create table-->
     <xsl:apply-templates select="$sql/dml/create-table/*" mode="template" >
         <xsl:with-param name="data" select="." />
     </xsl:apply-templates>
-    <xsl:text>&#xa;&#xa;</xsl:text>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+
+    <!--create primary key-->
+    <xsl:apply-templates select="$sql/dml/create-primary-key/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
 </xsl:template>
 
 <!--mode:expand
@@ -48,6 +56,11 @@ to produce a full specification of the schema.
 <xsl:template match="table" mode="expand" >
     <xsl:element name="table">
         <xsl:apply-templates select="@*" mode="expand" />
+        <xsl:if test="column/@primary-key='true'">
+            <xsl:element name="primary-key">
+                <xsl:apply-templates select="column[@primary-key='true']" mode="expand" />
+            </xsl:element>
+        </xsl:if>
         <xsl:apply-templates select="*" mode="expand" />
     </xsl:element>
 </xsl:template>
@@ -55,6 +68,13 @@ to produce a full specification of the schema.
 <xsl:template match="column" mode="expand" >
     <xsl:element name="column">
         <xsl:apply-templates select="@*" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="primary-key" mode="expand" >
+    <xsl:element name="primary-key">
+        <xsl:apply-templates select="@*" mode="expand" />
+        <xsl:apply-templates select="*" mode="expand" />
     </xsl:element>
 </xsl:template>
 
@@ -114,6 +134,19 @@ This section specifies templates that apply to text template constructs
     </xsl:for-each>
 </xsl:template>
 
+<xsl:template match="each-column-pk" mode="template" >
+    <xsl:param name="data" />
+    <xsl:variable name="temp" select="./*" />
+    <xsl:variable name="separator" select="@separator" />
+    <xsl:for-each select="$data/primary-key/column">
+        <xsl:apply-templates select="$temp" mode="template" >
+            <xsl:with-param name="data" select="." />
+        </xsl:apply-templates>
+        <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$separator" />
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
 <!--mode:substitute
 This section declares templates that apply to text content that should be sent
 to the output with posible substitutions.

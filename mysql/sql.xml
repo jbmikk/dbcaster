@@ -8,4 +8,14 @@
         </each-column>
         <text>&#xa;);</text>
     </create-table>
+    <create-primary-key>
+        <text>alter table <name /> add constraint <name />_pk primary key (&#xa;</text>
+        <each-column-pk separator=", ">
+            <text> <name /></text>
+        </each-column-pk>
+        <text>&#xa;);</text>
+    </create-primary-key>
+    <statement-separator>
+        <text>&#xa;&#xa;</text>
+    </statement-separator>
 </dml>

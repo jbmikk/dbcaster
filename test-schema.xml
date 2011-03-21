@@ -20,7 +20,9 @@
         <foreign-key table='record_label' />
     </table>
     <table name='track'>
-        <column name='id' type='integer' primary-key='true' />
+        <primary-key>
+            <column name='id' type='integer' />
+        </primary-key>
         <column name='name' type='varchar' length="32" />
         <foreign-key table='album' />
     </table>
