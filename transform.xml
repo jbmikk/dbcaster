@@ -76,6 +76,7 @@ to produce a full specification of the schema.
         <xsl:apply-templates select="@*" mode="expand" />
         <xsl:apply-templates select="*" mode="expand" />
     </xsl:element>
+    <xsl:apply-templates select="*" mode="expand" />
 </xsl:template>
 
 <xsl:template match="foreign-key" mode="expand" >
