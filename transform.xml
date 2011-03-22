@@ -35,27 +35,37 @@
     <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
 </xsl:template>
 
-<!--mode:expand
-This section specifies templates that preprocess and expand the data in the raw schema
-to produce a full specification of the schema.
+<!--mode:identity
+Templates that copy the context node-sets
 -->
 
-<xsl:template match="@*" mode="expand" >
+<xsl:template match="*" mode="identity">
+    <xsl:element name="{name()}">
+        <xsl:apply-templates select="@*" mode="identity" />
+        <xsl:apply-templates select="*" mode="identity" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="@*" mode="identity">
     <xsl:attribute name="{name()}">
         <xsl:value-of select="." />
     </xsl:attribute>
 </xsl:template>
 
+<!--mode:expand
+This section specifies templates that preprocess and expand the data in the raw schema
+to produce a full specification of the schema.
+-->
+
 <xsl:template match="schema" mode="expand" >
     <xsl:element name="schema">
-        <xsl:apply-templates select="@*" mode="expand" />
-        <xsl:apply-templates select="*" mode="expand" />
+        <xsl:apply-templates select="node()" mode="expand" />
     </xsl:element>
 </xsl:template>
 
 <xsl:template match="table" mode="expand" >
     <xsl:element name="table">
-        <xsl:apply-templates select="@*" mode="expand" />
+        <xsl:apply-templates select="@*" mode="identity" />
         <xsl:if test="column/@primary-key='true'">
             <xsl:element name="primary-key">
                 <xsl:apply-templates select="column[@primary-key='true']" mode="expand" />
@@ -66,24 +76,16 @@ to produce a full specification of the schema.
 </xsl:template>
 
 <xsl:template match="column" mode="expand" >
-    <xsl:element name="column">
-        <xsl:apply-templates select="@*" mode="expand" />
-    </xsl:element>
+    <xsl:apply-templates select="." mode="identity" />
 </xsl:template>
 
 <xsl:template match="primary-key" mode="expand" >
-    <xsl:element name="primary-key">
-        <xsl:apply-templates select="@*" mode="expand" />
-        <xsl:apply-templates select="*" mode="expand" />
-    </xsl:element>
+    <xsl:apply-templates select="." mode="identity" />
     <xsl:apply-templates select="*" mode="expand" />
 </xsl:template>
 
 <xsl:template match="foreign-key" mode="expand" >
-    <xsl:element name="foreign-key">
-        <xsl:apply-templates select="@*" mode="expand" />
-        <xsl:apply-templates select="*" mode="expand" />
-    </xsl:element>
+    <xsl:apply-templates select="." mode="identity" />
     <xsl:call-template name="foreign-key-get-columns" />
 </xsl:template>
 
