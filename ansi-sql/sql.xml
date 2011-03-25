@@ -2,20 +2,24 @@
 
 <dml>
     <create-table>
-        <text>create table <name />(&#xa;</text>
+        <text>create table <qname />(&#xa;</text>
         <each-column separator=",&#xa;">
-            <text> <name /> <type /> <null /></text>
+            <text> <qname /> <type /> <null /></text>
         </each-column>
         <text>&#xa;)</text>
     </create-table>
     <create-primary-key>
-        <text>alter table <name /> add constraint <name />_pk primary key (&#xa;</text>
+        <text>alter table <qname /> add constraint <name />_pk primary key (&#xa;</text>
         <each-column-pk separator=", ">
-            <text> <name /></text>
+            <text> <qname /></text>
         </each-column-pk>
         <text>&#xa;)</text>
     </create-primary-key>
     <statement-separator>
         <text>&#xa;&#xa;</text>
     </statement-separator>
+    <identifier-quoting>
+        <open>"</open>
+        <close>"</close>
+    </identifier-quoting>
 </dml>

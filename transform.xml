@@ -156,8 +156,14 @@ to the output with posible substitutions.
 -->
 <xsl:template match="name" mode="substitute" >
     <xsl:param name="data" />
-    <xsl:variable name="sust" select="name()" />
-    <xsl:value-of select="$data/@*[name()=$sust]" />
+    <xsl:value-of select="$data/@name" />
+</xsl:template>
+
+<xsl:template match="qname" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/open" />
+    <xsl:value-of select="$data/@name" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/close" />
 </xsl:template>
 
 <xsl:template match="type" mode="substitute" >
