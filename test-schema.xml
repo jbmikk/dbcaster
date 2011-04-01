@@ -13,7 +13,9 @@
         <column name='name' type='varchar' length="32" null='false' />
     </table>
     <table name='album'>
-        <column name='id' type='integer' primary-key='true' />
+        <primary-key>
+            <column name='id' type='integer' />
+        </primary-key>
         <column name='name' type='varchar' length="32" />
         <column name='year' type='date' null='true' />
         <foreign-key table='artist' />

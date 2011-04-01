@@ -124,7 +124,7 @@ to produce a full specification of the schema.
 <xsl:template name="table-expand-pk-columns">
     <xsl:param name="name" />
     <xsl:variable name="fktable" select="$schemadoc/schema/table[@name=$name]" />
-    <xsl:for-each select="$fktable/column[@primary-key='true']">
+    <xsl:for-each select="$fktable/column[@primary-key='true']|$fktable/primary-key/column">
         <column name="{@name}" type="{@type}" />
     </xsl:for-each>
 </xsl:template>
