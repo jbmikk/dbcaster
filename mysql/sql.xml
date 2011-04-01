@@ -15,6 +15,17 @@
         </each-column-pk>
         <text>&#xa;);</text>
     </create-primary-key>
+    <create-foreign-key>
+        <text>alter table <parent-qname /> add constraint <parent-name />_<table />_fk foreign key (&#xa;</text>
+        <each-column separator=", ">
+            <text> <qname /></text>
+        </each-column>
+        <text>&#xa;) references <qtable /> (&#xa;</text>
+        <each-referenced-column separator=", ">
+            <text> <qname /></text>
+        </each-referenced-column>
+        <text>&#xa;)</text>
+    </create-foreign-key>
     <statement-separator>
         <text>&#xa;&#xa;</text>
     </statement-separator>

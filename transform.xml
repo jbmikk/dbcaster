@@ -18,6 +18,7 @@
 
 <xsl:template match="target[@name='create-all']">
     <xsl:apply-templates select="$schema/schema/table" />
+    <xsl:apply-templates select="$schema/schema/table/foreign-key" />
 </xsl:template>
 
 <xsl:template match="table">
@@ -30,6 +31,14 @@
 
     <!--create primary key-->
     <xsl:apply-templates select="$sql/dml/create-primary-key/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+</xsl:template>
+
+<xsl:template match="foreign-key">
+    <!--create foreign key-->
+    <xsl:apply-templates select="$sql/dml/create-foreign-key/*" mode="template" >
         <xsl:with-param name="data" select="." />
     </xsl:apply-templates>
     <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
@@ -85,29 +94,37 @@ to produce a full specification of the schema.
 </xsl:template>
 
 <xsl:template match="foreign-key" mode="expand" >
-    <xsl:apply-templates select="." mode="identity" />
-    <xsl:call-template name="foreign-key-get-columns" />
+    <xsl:element name="foreign-key">
+        <xsl:apply-templates select="@*" mode="identity" />
+        <xsl:call-template name="foreign-key-expand-columns" />
+        <xsl:element name="referenced">
+            <xsl:call-template name="table-expand-pk-columns" >
+                <xsl:with-param name="name" select="@table" />
+            </xsl:call-template>
+        </xsl:element>
+    </xsl:element>
+    <xsl:call-template name="foreign-key-expand-columns" />
 </xsl:template>
 
-<xsl:template name="foreign-key-get-columns">
-    <xsl:variable name="pschema" select="./../.." />
+<xsl:template name="foreign-key-expand-columns">
     <xsl:variable name="null" select="@null" />
     <xsl:variable name="fktablename" select="@table" />
-    <xsl:variable name="fktable" select="$pschema/table[@name=$fktablename]" />
     <xsl:variable name="rspkcolumns">
-        <xsl:for-each select="$fktable">
-            <xsl:call-template name="table-get-pk-columns" />
-        </xsl:for-each>
+        <xsl:call-template name="table-expand-pk-columns" >
+            <xsl:with-param name="name" select="@table" />
+        </xsl:call-template>
     </xsl:variable>
     <xsl:variable name="pkcolumns" select="exsl:node-set($rspkcolumns)" />
-    <xsl:variable name="prefix" select="$fktablename" />
+    <xsl:variable name="prefix" select="@table" />
     <xsl:for-each select="$pkcolumns/column">
         <column name="{concat($prefix,'_',@name)}" type="{@type}" null="{$null}" />
     </xsl:for-each>
 </xsl:template>
 
-<xsl:template name="table-get-pk-columns">
-    <xsl:for-each select="column[@primary-key='true']">
+<xsl:template name="table-expand-pk-columns">
+    <xsl:param name="name" />
+    <xsl:variable name="fktable" select="$schemadoc/schema/table[@name=$name]" />
+    <xsl:for-each select="$fktable/column[@primary-key='true']">
         <column name="{@name}" type="{@type}" />
     </xsl:for-each>
 </xsl:template>
@@ -150,6 +167,21 @@ This section specifies templates that apply to text template constructs
         </xsl:if>
     </xsl:for-each>
 </xsl:template>
+
+<xsl:template match="each-referenced-column" mode="template" >
+    <xsl:param name="data" />
+    <xsl:variable name="temp" select="./*" />
+    <xsl:variable name="separator" select="@separator" />
+    <xsl:for-each select="$data/referenced/column">
+        <xsl:apply-templates select="$temp" mode="template" >
+            <xsl:with-param name="data" select="." />
+        </xsl:apply-templates>
+        <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$separator" />
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
+
 <!--mode:substitute
 This section declares templates that apply to text content that should be sent
 to the output with posible substitutions.
@@ -163,6 +195,30 @@ to the output with posible substitutions.
     <xsl:param name="data" />
     <xsl:value-of select="$sql/dml/identifier-quoting/open" />
     <xsl:value-of select="$data/@name" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/close" />
+</xsl:template>
+
+<xsl:template match="parent-name" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$data/../@name" />
+</xsl:template>
+
+<xsl:template match="parent-qname" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/open" />
+    <xsl:value-of select="$data/../@name" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/close" />
+</xsl:template>
+
+<xsl:template match="table" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$data/@table" />
+</xsl:template>
+
+<xsl:template match="qtable" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/open" />
+    <xsl:value-of select="$data/@table" />
     <xsl:value-of select="$sql/dml/identifier-quoting/close" />
 </xsl:template>
 
