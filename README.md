@@ -1,14 +1,14 @@
 # dbcaster: a tool to define database structure and generate SQL scripts
 
-Licensed under the [GPL version 3] (http://www.gnu.org/licenses/) or later
-Project Status: Alpha
+*  Licensed under the [GPL version 3] (http://www.gnu.org/licenses/) or later.
+*  Project Status: Alpha.
 
 ## Introduction
 
 dbcaster is a tool to generate SQL output from XLDM files.
 An XLDM file is a XML file describing a database structure in a
 platform agnostic format.
-This databse definition can be queried by different XSLT  
+This databse definition can be queried by different XSLT
 scripts in order to generate different outputs.
 
 To achieve platform independence certain conventions must be followed,
@@ -17,9 +17,9 @@ platform specific data types.
 All scripts use XSLT 1.0 transformations which are supported by most web browsers.
 You can also use any other XLST 1.0 processor.
 
-Currently the available scripts allow:
-* generate DDL code for different RDBMSs.
-* add support for new RDBMSs syntax using template files.
+Currently the available scripts allow to:  
+*  generate DDL code for different RDBMSs.
+*  add support for new RDBMSs syntax using template files.
 
 ## Getting Started
 
