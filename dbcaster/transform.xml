@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:exsl="http://exslt.org/common" >
+
+<xsl:include href="expand.xml" />
+<xsl:include href="template.xml" />
+
+<xsl:output method="text" media-type="text/plain" />
+
+<xsl:variable name="sql" select="document(concat('engines/', /build/for/@dialect, '/sql.xml'))" />
+<xsl:variable name="types" select="document(concat('engines/', /build/for/@dialect,'/types.xml'))" />
+<xsl:variable name="schemadoc" select="document(concat('../', /build/for/@schema))" />
+<xsl:variable name="procschema">
+    <xsl:apply-templates select="$schemadoc/schema" mode="expand" />
+</xsl:variable>
+<xsl:variable name="schema" select="exsl:node-set($procschema)" />
+
+<xsl:template match="/">
+    <xsl:apply-templates select="/build/for/target" />
+</xsl:template>
+
+<xsl:template match="target[@name='create-all']">
+    <xsl:apply-templates mode="create-all" select="$schema/schema/table" />
+    <xsl:apply-templates mode="create-all" select="$schema/schema/table/foreign-key" />
+</xsl:template>
+
+<xsl:template mode="create-all" match="table">
+
+    <!--create table-->
+    <xsl:apply-templates select="$sql/dml/create-table/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+
+    <!--create primary key-->
+    <xsl:apply-templates select="$sql/dml/create-primary-key/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+</xsl:template>
+
+<xsl:template mode="create-all" match="foreign-key">
+    <!--create foreign key-->
+    <xsl:apply-templates select="$sql/dml/create-foreign-key/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+</xsl:template>
+
+</xsl:stylesheet>

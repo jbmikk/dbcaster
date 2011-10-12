@@ -1,0 +1,75 @@
+<!--mode:expand
+This templates preprocess and expand abbreviations in the raw schema
+definition to produce a full specification of the schema, this makes
+it simpler to query the schema for processing.
+-->
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:exsl="http://exslt.org/common" >
+
+<xsl:include href="identity.xml" />
+
+<xsl:template match="schema" mode="expand" >
+    <xsl:element name="schema">
+        <xsl:apply-templates select="node()" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="table" mode="expand" >
+    <xsl:element name="table">
+        <xsl:apply-templates select="@*" mode="identity" />
+        <xsl:if test="column/@primary-key='true'">
+            <xsl:element name="primary-key">
+                <xsl:apply-templates select="column[@primary-key='true']" mode="expand" />
+            </xsl:element>
+        </xsl:if>
+        <xsl:apply-templates select="*" mode="expand" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="column" mode="expand" >
+    <xsl:apply-templates select="." mode="identity" />
+</xsl:template>
+
+<xsl:template match="primary-key" mode="expand" >
+    <xsl:apply-templates select="." mode="identity" />
+    <xsl:apply-templates select="*" mode="expand" />
+</xsl:template>
+
+<xsl:template match="foreign-key" mode="expand" >
+    <xsl:element name="foreign-key">
+        <xsl:apply-templates select="@*" mode="identity" />
+        <xsl:call-template name="foreign-key-expand-columns" />
+        <xsl:element name="referenced">
+            <xsl:call-template name="table-expand-pk-columns" >
+                <xsl:with-param name="name" select="@table" />
+            </xsl:call-template>
+        </xsl:element>
+    </xsl:element>
+    <xsl:call-template name="foreign-key-expand-columns" />
+</xsl:template>
+
+<xsl:template name="foreign-key-expand-columns">
+    <xsl:variable name="null" select="@null" />
+    <xsl:variable name="fktablename" select="@table" />
+    <xsl:variable name="rspkcolumns">
+        <xsl:call-template name="table-expand-pk-columns" >
+            <xsl:with-param name="name" select="@table" />
+        </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="pkcolumns" select="exsl:node-set($rspkcolumns)" />
+    <xsl:variable name="prefix" select="@table" />
+    <xsl:for-each select="$pkcolumns/column">
+        <column name="{concat($prefix,'_',@name)}" type="{@type}" null="{$null}" />
+    </xsl:for-each>
+</xsl:template>
+
+<xsl:template name="table-expand-pk-columns">
+    <xsl:param name="name" />
+    <xsl:variable name="fktable" select="ancestor::schema/table[@name=$name]" />
+    <xsl:for-each select="$fktable/column[@primary-key='true']|$fktable/primary-key/column">
+        <column name="{@name}" type="{@type}" />
+    </xsl:for-each>
+</xsl:template>
+
+</xsl:stylesheet>

@@ -1,0 +1,59 @@
+<!--mode:template
+This templates perform text substitutions on text templates.
+-->
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+
+<xsl:include href="substitute.xml" />
+
+<xsl:template match="text" mode="template" >
+    <xsl:param name="data" />
+    <xsl:message>text</xsl:message>
+    <xsl:apply-templates mode="substitute" >
+        <xsl:with-param name="data" select="$data" />
+    </xsl:apply-templates>
+</xsl:template>
+
+<xsl:template match="each-column" mode="template" >
+    <xsl:param name="data" />
+    <xsl:variable name="temp" select="./*" />
+    <xsl:variable name="separator" select="@separator" />
+    <xsl:for-each select="$data/column">
+        <xsl:apply-templates select="$temp" mode="template" >
+            <xsl:with-param name="data" select="." />
+        </xsl:apply-templates>
+        <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$separator" />
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
+
+<xsl:template match="each-column-pk" mode="template" >
+    <xsl:param name="data" />
+    <xsl:variable name="temp" select="./*" />
+    <xsl:variable name="separator" select="@separator" />
+    <xsl:for-each select="$data/primary-key/column">
+        <xsl:apply-templates select="$temp" mode="template" >
+            <xsl:with-param name="data" select="." />
+        </xsl:apply-templates>
+        <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$separator" />
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
+
+<xsl:template match="each-referenced-column" mode="template" >
+    <xsl:param name="data" />
+    <xsl:variable name="temp" select="./*" />
+    <xsl:variable name="separator" select="@separator" />
+    <xsl:for-each select="$data/referenced/column">
+        <xsl:apply-templates select="$temp" mode="template" >
+            <xsl:with-param name="data" select="." />
+        </xsl:apply-templates>
+        <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$separator" />
+        </xsl:if>
+    </xsl:for-each>
+</xsl:template>
+
+</xsl:stylesheet>

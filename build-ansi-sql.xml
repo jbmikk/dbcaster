@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="transform.xml"?>
+<?xml-stylesheet type="text/xsl" href="dbcaster/transform.xml"?>
 <build>
     <for schema='test-schema.xml' dialect='ansi-sql'>
         <target name='create-all' />

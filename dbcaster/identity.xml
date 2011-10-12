@@ -1,0 +1,21 @@
+<!--mode:identity
+This templates expand current nodes as themselves.
+-->
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:exsl="http://exslt.org/common" >
+
+<xsl:template match="*" mode="identity">
+    <xsl:element name="{name()}">
+        <xsl:apply-templates select="@*" mode="identity" />
+        <xsl:apply-templates select="*" mode="identity" />
+    </xsl:element>
+</xsl:template>
+
+<xsl:template match="@*" mode="identity">
+    <xsl:attribute name="{name()}">
+        <xsl:value-of select="." />
+    </xsl:attribute>
+</xsl:template>
+
+</xsl:stylesheet>

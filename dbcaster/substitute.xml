@@ -1,0 +1,78 @@
+<!--mode:substitute
+This section declares templates that apply to text content that should be sent
+to the output with posible substitutions.
+-->
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:exsl="http://exslt.org/common" >
+
+<xsl:template match="name" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$data/@name" />
+</xsl:template>
+
+<xsl:template match="qname" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/open" />
+    <xsl:value-of select="$data/@name" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/close" />
+</xsl:template>
+
+<xsl:template match="parent-name" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$data/../@name" />
+</xsl:template>
+
+<xsl:template match="parent-qname" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/open" />
+    <xsl:value-of select="$data/../@name" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/close" />
+</xsl:template>
+
+<xsl:template match="table" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$data/@table" />
+</xsl:template>
+
+<xsl:template match="qtable" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/open" />
+    <xsl:value-of select="$data/@table" />
+    <xsl:value-of select="$sql/dml/identifier-quoting/close" />
+</xsl:template>
+
+<xsl:template match="type" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:variable name="typename" select="$data/@type" />
+    <xsl:choose>
+        <xsl:when test="$types/types/type[name()=$typename]/not-supported">
+            <xsl:message terminate="yes">
+                Type not supported by selected dialect
+            </xsl:message>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="$types/types/type[@name=$typename]/expands/@name" />
+        </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="$data/@length">
+        <xsl:value-of select="concat('(',$data/@length,')')" />
+    </xsl:if>
+</xsl:template>
+
+<xsl:template match="null" mode="substitute" >
+    <xsl:param name="data" />
+    <xsl:choose>
+        <xsl:when test="$data/@null='false'">
+            <xsl:text>not null</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:text>null</xsl:text>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+<xsl:template match="text()" mode="substitute" >
+    <xsl:value-of select="." />
+</xsl:template>
+</xsl:stylesheet>
