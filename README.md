@@ -14,12 +14,23 @@ scripts in order to generate different outputs.
 To achieve platform independence certain conventions must be followed,
 such as using ANSI SQL data types, which scripts will translate later into
 platform specific data types.
-All scripts use XSLT 1.0 transformations which are supported by most web browsers.
-You can also use any other XLST 1.0 processor.
 
-Currently the available scripts allow to:  
-*  generate DDL code for different RDBMSs.
-*  add support for new RDBMSs syntax using template files.
+Currently the available scripts feature:  
+
+* generated DDL code for tables, primary keys and foreign keys.
+* support for different RDBMSs: MySQL, MS SQL Server, ANSI SQL.
+* extensibility to add support for new RDBMSs syntax using template files.
+
+## XLST processors support
+
+All scripts require XSLT 1.0 and EXSLT. This features are supported by most
+web browsers among other XSLT processors.
+Currently this scripts have been tested with Firefox and Chromium, but you
+should be able to use any processor with the mentioned features.
+
+NOTE: If you are using Chromium you may have problems trying to use the files locally.
+To solve this you can either access the files through a web server, or start
+chromium with the --allow-file-access-from-files option.
 
 ## Getting Started
 
