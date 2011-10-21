@@ -63,8 +63,9 @@ to the output with posible substitutions.
 <xsl:template match="null" mode="substitute" >
     <xsl:param name="data" />
     <xsl:choose>
-        <xsl:when test="$data/@null='false'">
-            <xsl:text>not null</xsl:text>
+		<!--If it's a primary key it should not be null-->
+		<xsl:when test="$data/@null='false' or $data/../primary-key/column[@name=$data/@name]">
+            <xsl:text>not null</xsl:text> 
         </xsl:when>
         <xsl:otherwise>
             <xsl:text>null</xsl:text>
