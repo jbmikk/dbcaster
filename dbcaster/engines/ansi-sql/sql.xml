@@ -26,6 +26,12 @@
         </each-referenced-column>
         <text>&#xa;)</text>
     </create-foreign-key>
+    <drop-table>
+        <text>drop table <qname /> </text>
+    </drop-table>
+    <drop-foreign-key>
+        <text>alter table <parent-qname /> drop constraint <parent-name />_<table />_fk </text>
+    </drop-foreign-key>
     <statement-separator>
         <text>&#xa;&#xa;</text>
     </statement-separator>

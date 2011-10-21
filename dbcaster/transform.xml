@@ -48,4 +48,25 @@
     <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
 </xsl:template>
 
+<xsl:template match="target[@name='drop-all']">
+    <xsl:apply-templates mode="drop-all" select="$schema/schema/table/foreign-key" />
+    <xsl:apply-templates mode="drop-all" select="$schema/schema/table" />
+</xsl:template>
+
+<xsl:template mode="drop-all" match="table">
+    <!--drop table-->
+    <xsl:apply-templates select="$sql/dml/drop-table/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+</xsl:template>
+
+<xsl:template mode="drop-all" match="foreign-key">
+    <!--drop foreign key-->
+    <xsl:apply-templates select="$sql/dml/drop-foreign-key/*" mode="template" >
+        <xsl:with-param name="data" select="." />
+    </xsl:apply-templates>
+    <xsl:apply-templates select="$sql/dml/statement-separator/*" mode="template" />
+</xsl:template>
+
 </xsl:stylesheet>

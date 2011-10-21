@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="dbcaster/transform.xml"?>
+<build>
+    <for schema='test-schema.xml' dialect='sql-server'>
+        <target name='drop-all' />
+    </for>
+</build>
