@@ -24,7 +24,7 @@
         <each-referenced-column separator=", ">
             <text> <qname /></text>
         </each-referenced-column>
-        <text>&#xa;)</text>
+        <text>&#xa;);</text>
     </create-foreign-key>
     <statement-separator>
         <text>&#xa;&#xa;</text>
