@@ -39,12 +39,13 @@ it simpler to query the schema for processing.
 <xsl:template match="foreign-key" mode="expand" >
     <xsl:element name="foreign-key">
         <xsl:apply-templates select="@*" mode="identity" />
-        <xsl:call-template name="foreign-key-expand-columns" />
         <xsl:element name="referenced">
             <xsl:call-template name="table-expand-pk-columns" >
                 <xsl:with-param name="name" select="@table" />
             </xsl:call-template>
         </xsl:element>
+		<!--It's important to keep this last, so following-sibling::* returns empty for the last item-->
+        <xsl:call-template name="foreign-key-expand-columns" />
     </xsl:element>
     <xsl:call-template name="foreign-key-expand-columns" />
 </xsl:template>
