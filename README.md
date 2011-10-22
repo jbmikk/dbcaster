@@ -15,11 +15,20 @@ To achieve platform independence certain conventions must be followed,
 such as using ANSI SQL data types, which scripts will translate later into
 platform specific data types.
 
-Currently the available scripts feature:  
+Currently the available features include:  
 
-* generated DDL code for tables, primary keys and foreign keys.
-* support for different RDBMSs: MySQL, MS SQL Server, ANSI SQL.
+* generating DDL code for creating and dropping tables, primary keys and foreign keys.
+* syntax support for different RDBMSs. 
+* type mappings between different RDBMSs (based on ANSI SQL).
 * extensibility to add support for new RDBMSs syntax using template files.
+
+Supported RDBMSs include:
+
+* ANSI SQL (standard syntax, serves as reference and may be useful for compliant engines)
+* MySQL
+* Firebird
+* MS SQL Server
+
 
 ## XLST processors support
 
@@ -38,11 +47,12 @@ The quickest way to start defining a database is by modifying the default
 test files included in the repository.
 
 There is a default test-schema.xml file that defines a simple database
-schema and a set of target files that generate DDL create scripts for
+schema and a set of build files that generate DDL create scripts for
 different RDBMS.
 
-All files starting with *build* are target files, they define the database
-schema to be used, and what action to do with it.
-You can test any target file simply by opening it in your browser, you
+All files starting with *build* are examples of how to generate code, they
+define the database schema to be used, and what target to execute with it.
+Currently available targets are "create-all" and "drop-all".
+You can test any build file simply by opening it in your browser, you
 should see the final SQL script right away.
 
