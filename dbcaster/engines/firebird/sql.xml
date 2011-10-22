@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dml>
+    <create-table>
+        <text>create table <qname />(&#xa;</text>
+        <each-column separator=",&#xa;">
+            <text> <qname /> <type /> <null /></text>
+        </each-column>
+        <text>&#xa;);</text>
+    </create-table>
+    <create-primary-key>
+        <text>alter table <qname /> add constraint <name />_pk primary key (&#xa;</text>
+        <each-column-pk separator=", ">
+            <text> <qname /></text>
+        </each-column-pk>
+        <text>&#xa;);</text>
+    </create-primary-key>
+    <create-foreign-key>
+        <text>alter table <parent-qname /> add constraint <parent-name />_<table />_fk foreign key (&#xa;</text>
+        <each-column separator=", ">
+            <text> <qname /></text>
+        </each-column>
+        <text>&#xa;) references <qtable /> (&#xa;</text>
+        <each-referenced-column separator=", ">
+            <text> <qname /></text>
+        </each-referenced-column>
+        <text>&#xa;);</text>
+    </create-foreign-key>
+    <drop-table>
+        <text>drop table <qname />;</text>
+    </drop-table>
+    <drop-foreign-key>
+        <text>alter table <parent-qname /> drop foreign key <parent-name />_<table />_fk;</text>
+    </drop-foreign-key>
+    <statement-separator>
+        <text>&#xa;&#xa;</text>
+    </statement-separator>
+    <identifier-quoting>
+        <open>"</open>
+        <close>"</close>
+    </identifier-quoting>
+</dml>
